@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"bytes"
 	"fmt"
-	"github.com/Shopify/sarama"
 	"os"
 	"path/filepath"
 	"strings"
@@ -20,7 +19,7 @@ const (
 
 var (
 	kafkaTopic = "my-tfffdesdddt"
-	producer   sarama.SyncProducer
+	//producer   sarama.SyncProducer
 )
 
 type fileLogWriter struct {
@@ -124,7 +123,7 @@ func (w *fileLogWriter) write(level Level, s string) {
 	}
 
 	if openKafak {
-		inputKafka(buf.Bytes(), kafkaTopic)
+		//inputKafka(buf.Bytes(), kafkaTopic)
 	}
 
 	writer.Write(buf.Bytes())
@@ -219,45 +218,45 @@ func createFile(basePath, logName string, level Level, slot int, t time.Time) (*
 	return f, nil
 }
 
-func kafkaInit(addrs []string) error {
-	var err error
-	config := sarama.NewConfig()
-	config.Producer.Return.Successes = true
-	config.Producer.Timeout = 2 * time.Second
-	producer, err = sarama.NewSyncProducer(addrs, config)
-	fmt.Println(">>>")
-	if err != nil {
-		fmt.Println(err)
-		return err
-	}
-	return nil
-	//go func() {
-	//	for e := range producer.E() {
-	//		switch ev := e.(type) {
-	//		case *kafka.Message:
-	//			if ev.TopicPartition.Error != nil {
-	//				fmt.Printf("Delivery failed: %v\n", ev.TopicPartition)
-	//			} else {
-	//				fmt.Printf("Delivered message to %v\n", ev.TopicPartition)
-	//			}
-	//		}
-	//	}
-	//}()
-}
-
-func inputKafka(buf []byte, key string) {
-	if producer == nil {
-		return
-	}
-	msg := &sarama.ProducerMessage{
-		Topic: key,
-		Value: sarama.ByteEncoder(buf),
-	}
-	part, offset, err := producer.SendMessage(msg)
-	if err != nil {
-		fmt.Println(fmt.Sprintf("send message(%s) err=%s \n", string(buf), err))
-	} else {
-		_, _ = fmt.Fprintf(os.Stdout, string(buf)+"发送成功，partition=%d, offset=%d \n", part, offset)
-	}
-	time.Sleep(2 * time.Second)
-}
+//func kafkaInit(addrs []string) error {
+//	var err error
+//	config := sarama.NewConfig()
+//	config.Producer.Return.Successes = true
+//	config.Producer.Timeout = 2 * time.Second
+//	producer, err = sarama.NewSyncProducer(addrs, config)
+//	fmt.Println(">>>")
+//	if err != nil {
+//		fmt.Println(err)
+//		return err
+//	}
+//	return nil
+//	//go func() {
+//	//	for e := range producer.E() {
+//	//		switch ev := e.(type) {
+//	//		case *kafka.Message:
+//	//			if ev.TopicPartition.Error != nil {
+//	//				fmt.Printf("Delivery failed: %v\n", ev.TopicPartition)
+//	//			} else {
+//	//				fmt.Printf("Delivered message to %v\n", ev.TopicPartition)
+//	//			}
+//	//		}
+//	//	}
+//	//}()
+//}
+//
+//func inputKafka(buf []byte, key string) {
+//	if producer == nil {
+//		return
+//	}
+//	msg := &sarama.ProducerMessage{
+//		Topic: key,
+//		Value: sarama.ByteEncoder(buf),
+//	}
+//	part, offset, err := producer.SendMessage(msg)
+//	if err != nil {
+//		fmt.Println(fmt.Sprintf("send message(%s) err=%s \n", string(buf), err))
+//	} else {
+//		_, _ = fmt.Fprintf(os.Stdout, string(buf)+"发送成功，partition=%d, offset=%d \n", part, offset)
+//	}
+//	time.Sleep(2 * time.Second)
+//}

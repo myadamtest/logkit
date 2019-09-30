@@ -123,10 +123,10 @@ func Init(logName string, logLevel Level) {
 }
 
 func OpenKafka(addrs []string) {
-	err := kafkaInit(addrs)
-	if err == nil {
-		openKafak = true
-	}
+	//err := kafkaInit(addrs)
+	//if err == nil {
+	//	openKafak = true
+	//}
 }
 
 func SetLevel(level Level) {
